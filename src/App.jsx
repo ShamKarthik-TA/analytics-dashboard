@@ -58,14 +58,14 @@ function Counter() {
 function UserFetcher() {
   const [userId, setUserId] = useState(1);
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Simulating initial loading state
   const [error, setError] = useState(null);
 
-  // useEffect for data fetching
   useEffect(() => {
+    // Start loading and clear previous data/errors on dependency change or mount
     setLoading(true);
-    setUserData(null); // Clear previous data
-    setError(null);    // Clear previous error
+    setUserData(null);
+    setError(null);
 
     const fetchUser = async () => {
       try {
@@ -79,21 +79,21 @@ function UserFetcher() {
       } catch (e) {
         setError(e);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false once fetch is complete
       }
     };
 
     fetchUser();
 
-    // Cleanup function (optional):
-    // This runs when the component unmounts or before the effect re-runs
-    // (if dependencies change). Useful for clearing timers, canceling network requests, etc.
+    // Cleanup function: This runs when the component unmounts or
+    // before the effect re-runs (if dependencies change).
+    // Useful for clearing timers, canceling network requests, etc.
     return () => {
       console.log(`Cleanup for userId ${userId}. (e.g., cancel pending request)`);
       // In a real app, you might cancel the fetch request here using an AbortController.
     };
 
-  }, [userId]); // Dependency Array: This effect re-runs whenever `userId` changes.
+  }, [userId]); // Dependency Array: Effect re-runs whenever `userId` changes.
                 // An empty array `[]` means it runs only once after the initial render (on mount).
 
   const handleNextUser = () => {
@@ -210,6 +210,7 @@ function InputFocus() {
 
   const focusInput = () => {
     // `.current` property of the ref holds the actual DOM element once mounted.
+    // We are deliberately keeping this styling for visual feedback on focus.
     if (inputRef.current) {
       inputRef.current.focus(); // Programmatically focus the input field
       inputRef.current.style.borderColor = '#4CAF50'; // Optional: highlight
@@ -252,9 +253,9 @@ function InputFocus() {
 }
 
 /**
- * 5. How to Create a JSX Component
+ * 5. Basic JSX Component Example
  * Scenario: Demonstrate the basic structure of a functional React component
- * that returns JSX.
+ * that returns JSX and receives simple props.
  *
  * Functional components are plain JavaScript functions that accept "props"
  * (properties or arguments) as their single argument and return React elements,
@@ -262,15 +263,14 @@ function InputFocus() {
  */
 function BasicJSXComponent({ title, message }) {
   // Functional components receive props as an object.
-  // We use object destructuring to easily access them.
-  // Example: { title: "Hello", message: "World" }
+  // We use object destructuring to easily access them (e.g., `title` and `message`).
 
   return (
     // JSX must return a single root element. If you need to return multiple
     // elements without an extra DOM node, use a React Fragment (<>...</>).
     <div className="p-6 bg-white rounded-lg shadow-md mb-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        JSX Component Example: A Simple Card
+        5. JSX Component Example: A Simple Card
       </h2>
       <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
         <h3 className="text-xl font-semibold text-blue-800 mb-2">{title}</h3>
@@ -278,6 +278,36 @@ function BasicJSXComponent({ title, message }) {
         <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 shadow-sm">
           Click Me (from JSX Component)
         </button>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+/**
+ * 7. Stateless Functional Component Example
+ * Scenario: A very simple component that only renders UI based on props,
+ * without using any state, effects, or refs. This is the most basic form
+ * of a functional component.
+ */
+function StatelessFunctionalComponentExample({ headerText, description }) {
+  // This component doesn't use useState, useEffect, useContext, or useRef.
+  // It simply receives props and renders them.
+  // Its output is solely determined by the props it receives.
+
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-md mb-8">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        Stateless Functional Component Example
+      </h2>
+      <div className="bg-pink-50 p-4 rounded-md border border-pink-200">
+        <h3 className="text-xl font-semibold text-pink-800 mb-2">{headerText}</h3>
+        <p className="text-gray-700">{description}</p>
+        <p className="text-sm text-gray-500 mt-2">
+          (This component is stateless - it only depends on the props you give it!)
+        </p>
       </div>
     </div>
   );
@@ -304,20 +334,27 @@ export default function App() {
         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-10">
           React Hooks & JSX in Action
         </h1>
+
+
+        {/* --- Stateless Functional Component Example --- */}
+        <StatelessFunctionalComponentExample
+          headerText="Welcome to a Stateless Component!"
+          description="This component simply displays text passed via props and does not manage any internal state."
+        />
+
+        {/* --- Other Hook Examples --- */}
+        <Counter />
+        <UserFetcher />
+        <ThemeToggler />
+        <InputFocus />
         <BasicJSXComponent
           title="Hello from a JSX Component!"
           message="This component demonstrates how to define and use a simple functional component with props."
         />
 
-        <Counter />
-        <UserFetcher />
-        <ThemeToggler />
-        <InputFocus />
-        {/* Render the new BasicJSXComponent */}
-
         <p className="text-center text-gray-600 mt-10">
-          These examples demonstrate the core functionality of `useState`, `useEffect`, `useContext`, `useRef`, and
-          basic JSX component creation in simple, real-life scenarios within functional React components.
+          These examples demonstrate the core functionality of `useState`, `useEffect`, `useContext`, `useRef`,
+          basic JSX component creation, and the fundamental syntax of functional React components.
         </p>
       </div>
     </div>
